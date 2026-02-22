@@ -1,0 +1,796 @@
+# ============================================================
+# CURSORRULES - AUTOMATIZADOR PRO
+# Plataforma de Automatización Profesional
+# ============================================================
+# Estas reglas le dicen a Cursor exactamente cómo ayudarte
+# a construir tu plataforma de forma profesional.
+# ============================================================
+
+# ============================================================
+# 1. IDENTIDAD DEL PROYECTO
+# ============================================================
+
+Estás ayudando a construir "AutomatiZa Pro", una plataforma
+de automatización visual tipo Make.com pero más simple,
+potente y elegante.
+
+Stack tecnológico:
+- Frontend: React + Vite + TailwindCSS + ReactFlow
+- Backend: Node.js + Express
+- Base de datos: Supabase (PostgreSQL)
+- Deploy Frontend: Vercel
+- Deploy Backend: Render.com
+
+El usuario es principiante en programación. Siempre:
+- Explica brevemente qué hace el código que generas
+- Usa comentarios en español dentro del código
+- Divide tareas grandes en pasos pequeños
+- Si hay varias formas de hacer algo, elige la más simple
+
+
+# ============================================================
+# 2. FRONTEND DESIGN SKILL
+# Interfaces profesionales y memorables
+# ============================================================
+
+## Filosofía de Diseño
+- Diseña interfaces DISTINTIVAS, no genéricas
+- Evita: Inter/Roboto/Arial, gradientes morados sobre blanco,
+  layouts predecibles, componentes cookie-cutter
+- Cada componente debe tener personalidad propia
+- Usa CSS variables para mantener consistencia de colores
+- Prioriza: tipografía única, colores dominantes con acentos,
+  espaciado generoso, micro-interacciones sutiles
+
+## Paleta de Colores del Proyecto
+```css
+:root {
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d27;
+  --bg-card: #1e2130;
+  --accent-primary: #6366f1;   /* Indigo vibrante */
+  --accent-secondary: #8b5cf6; /* Violeta */
+  --accent-success: #10b981;   /* Verde */
+  --accent-warning: #f59e0b;   /* Amarillo */
+  --accent-danger: #ef4444;    /* Rojo */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --border: #2d3148;
+  --shadow: rgba(99, 102, 241, 0.15);
+}
+```
+
+## Tipografía
+- Display/Títulos: "Space Grotesk" o "Syne"
+- Cuerpo: "DM Sans" o "Plus Jakarta Sans"
+- Código/Monospace: "JetBrains Mono"
+- Siempre importa desde Google Fonts
+
+## Componentes React - Reglas
+- Usa TailwindCSS para todos los estilos
+- Componentes funcionales con hooks (no clases)
+- Props tipadas con PropTypes o comentarios JSDoc
+- Nombres en PascalCase para componentes
+- Nombres en camelCase para funciones y variables
+- Cada componente en su propio archivo
+- Siempre exporta como default export
+
+## Animaciones
+- Usa transiciones CSS para hover states
+- Transiciones de 150-300ms para UI rápida
+- Usa `transition-all duration-200` de Tailwind
+- Para animaciones complejas: usa `framer-motion`
+- Loading states: skeletons, no spinners genéricos
+
+## Ejemplo de Componente Bien Hecho
+```jsx
+// Botón primario profesional
+const ButtonPrimary = ({ onClick, children, loading = false }) => (
+  <button
+    onClick={onClick}
+    disabled={loading}
+    className="
+      px-4 py-2 rounded-lg font-medium text-sm
+      bg-indigo-600 hover:bg-indigo-500
+      text-white
+      transition-all duration-200
+      disabled:opacity-50 disabled:cursor-not-allowed
+      flex items-center gap-2
+    "
+  >
+    {loading && <Spinner className="w-4 h-4 animate-spin" />}
+    {children}
+  </button>
+);
+```
+
+
+# ============================================================
+# 3. VERCEL REACT BEST PRACTICES
+# Deploy y optimización para Vercel
+# ============================================================
+
+## Estructura de Proyecto React/Vite para Vercel
+```
+frontend/
+├── src/
+│   ├── components/     # Componentes reutilizables
+│   │   ├── ui/         # Botones, inputs, cards básicos
+│   │   └── workflow/   # Componentes del editor de workflows
+│   ├── pages/          # Páginas principales
+│   ├── hooks/          # Custom hooks de React
+│   ├── services/       # Llamadas a la API backend
+│   ├── store/          # Estado global (Zustand)
+│   ├── utils/          # Funciones auxiliares
+│   └── styles/         # CSS global y variables
+├── public/
+├── index.html
+├── vite.config.js
+└── package.json
+```
+
+## Reglas de Performance en Vercel
+- Usa lazy loading para componentes pesados:
+  ```jsx
+  const WorkflowEditor = lazy(() => import('./components/WorkflowEditor'));
+  ```
+- Divide el código con dynamic imports
+- Optimiza imágenes: usa WebP, agrega width/height
+- Variables de entorno: siempre con prefijo VITE_
+  ```
+  VITE_API_URL=https://tu-backend.render.com
+  VITE_SUPABASE_URL=https://xxx.supabase.co
+  VITE_SUPABASE_ANON_KEY=xxx
+  ```
+- Configura `vercel.json` para rewrites del SPA:
+  ```json
+  {
+    "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  }
+  ```
+
+## Estado Global con Zustand (Simple y Potente)
+```jsx
+// store/workflowStore.js
+import { create } from 'zustand';
+
+const useWorkflowStore = create((set) => ({
+  // Estado
+  nodes: [],
+  edges: [],
+  activeWorkflow: null,
+  
+  // Acciones
+  setNodes: (nodes) => set({ nodes }),
+  setEdges: (edges) => set({ edges }),
+  saveWorkflow: async (workflow) => {
+    // lógica de guardado
+  }
+}));
+```
+
+
+# ============================================================
+# 4. API DESIGN PRINCIPLES
+# Diseño de APIs del Backend
+# ============================================================
+
+## Estructura de URLs - RESTful
+```
+GET    /api/workflows          → Listar todos los workflows
+POST   /api/workflows          → Crear nuevo workflow
+GET    /api/workflows/:id      → Ver un workflow
+PUT    /api/workflows/:id      → Actualizar workflow
+DELETE /api/workflows/:id      → Eliminar workflow
+POST   /api/workflows/:id/run  → Ejecutar workflow
+GET    /api/workflows/:id/logs → Ver logs de ejecución
+
+GET    /api/integrations       → Listar integraciones disponibles
+POST   /api/integrations/connect → Conectar una integración
+
+POST   /api/auth/register      → Registrar usuario
+POST   /api/auth/login         → Login
+POST   /api/auth/logout        → Logout
+GET    /api/auth/me            → Perfil del usuario
+```
+
+## Respuestas de API - Formato Estándar SIEMPRE
+```javascript
+// ✅ ÉXITO - siempre este formato
+{
+  "success": true,
+  "data": { ... },        // Los datos solicitados
+  "message": "Workflow guardado correctamente",
+  "meta": {               // Opcional: paginación, etc.
+    "total": 100,
+    "page": 1,
+    "limit": 20
+  }
+}
+
+// ✅ ERROR - siempre este formato
+{
+  "success": false,
+  "error": {
+    "code": "WORKFLOW_NOT_FOUND",
+    "message": "El workflow con ID 123 no existe",
+    "details": {}         // Opcional: info extra del error
+  }
+}
+```
+
+## Códigos HTTP Correctos
+- 200: OK (GET exitoso)
+- 201: Created (POST exitoso que crea algo)
+- 400: Bad Request (datos inválidos del cliente)
+- 401: Unauthorized (no autenticado)
+- 403: Forbidden (no tiene permiso)
+- 404: Not Found (recurso no existe)
+- 409: Conflict (ya existe)
+- 500: Internal Server Error (error del servidor)
+
+## Middleware Obligatorio en Express
+```javascript
+// Siempre incluir estos middlewares:
+app.use(express.json());
+app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(helmet());        // Seguridad
+app.use(rateLimit({       // Límite de requests
+  windowMs: 15 * 60 * 1000,
+  max: 100
+}));
+```
+
+
+# ============================================================
+# 5. ERROR HANDLING PATTERNS
+# Manejo profesional de errores
+# ============================================================
+
+## Frontend - Manejo de Errores en React
+
+### Errores de API (en services/)
+```javascript
+// services/api.js - Cliente API centralizado
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  timeout: 10000,
+});
+
+// Interceptor: maneja errores automáticamente
+apiClient.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    const mensaje = error.response?.data?.error?.message 
+      || 'Algo salió mal. Intenta de nuevo.';
+    
+    // Mostrar notificación al usuario
+    toast.error(mensaje);
+    
+    // Si es 401, redirigir al login
+    if (error.response?.status === 401) {
+      window.location.href = '/login';
+    }
+    
+    return Promise.reject(error);
+  }
+);
+```
+
+### Estados de Loading y Error en Componentes
+```jsx
+// ✅ SIEMPRE maneja estos 3 estados:
+const WorkflowList = () => {
+  const [workflows, setWorkflows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  if (loading) return <SkeletonLoader />;
+  if (error) return <ErrorMessage message={error} onRetry={cargarWorkflows} />;
+  if (workflows.length === 0) return <EmptyState />;
+  
+  return <div>{/* lista de workflows */}</div>;
+};
+```
+
+## Backend - Manejo de Errores en Node.js
+
+### Clase de Error Personalizada
+```javascript
+// utils/AppError.js
+class AppError extends Error {
+  constructor(message, statusCode, code) {
+    super(message);
+    this.statusCode = statusCode;
+    this.code = code;
+    this.isOperational = true;
+  }
+}
+
+// Errores predefinidos
+AppError.notFound = (resource) => 
+  new AppError(`${resource} no encontrado`, 404, 'NOT_FOUND');
+
+AppError.unauthorized = () => 
+  new AppError('No autorizado', 401, 'UNAUTHORIZED');
+
+AppError.badRequest = (msg) => 
+  new AppError(msg, 400, 'BAD_REQUEST');
+```
+
+### Middleware de Errores Global
+```javascript
+// middleware/errorHandler.js
+const errorHandler = (err, req, res, next) => {
+  console.error(`[ERROR] ${err.message}`, {
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+  });
+
+  if (err.isOperational) {
+    return res.status(err.statusCode).json({
+      success: false,
+      error: { code: err.code, message: err.message }
+    });
+  }
+
+  // Error inesperado - no revelar detalles
+  res.status(500).json({
+    success: false,
+    error: { 
+      code: 'INTERNAL_ERROR',
+      message: 'Error interno del servidor'
+    }
+  });
+};
+```
+
+### Try-Catch en Controladores
+```javascript
+// ✅ SIEMPRE usa este patrón en controllers
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+// Uso:
+router.get('/workflows', asyncHandler(async (req, res) => {
+  const workflows = await WorkflowService.getAll(req.user.id);
+  res.json({ success: true, data: workflows });
+}));
+```
+
+
+# ============================================================
+# 6. POSTGRESQL / SUPABASE SKILL
+# Base de datos profesional
+# ============================================================
+
+## Esquema de Base de Datos del Proyecto
+```sql
+-- Tabla de usuarios (manejada por Supabase Auth)
+-- Solo necesitas tabla de perfiles adicionales:
+
+CREATE TABLE profiles (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  username TEXT UNIQUE,
+  full_name TEXT,
+  avatar_url TEXT,
+  plan TEXT DEFAULT 'free', -- 'free', 'pro', 'enterprise'
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Workflows del usuario
+CREATE TABLE workflows (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  nodes JSONB NOT NULL DEFAULT '[]',  -- Nodos del editor visual
+  edges JSONB NOT NULL DEFAULT '[]',  -- Conexiones entre nodos
+  is_active BOOLEAN DEFAULT false,
+  trigger_type TEXT,  -- 'webhook', 'schedule', 'manual'
+  trigger_config JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Ejecuciones de workflows
+CREATE TABLE workflow_executions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  workflow_id UUID REFERENCES workflows(id) ON DELETE CASCADE,
+  status TEXT DEFAULT 'pending', -- 'pending','running','success','failed'
+  started_at TIMESTAMPTZ DEFAULT NOW(),
+  finished_at TIMESTAMPTZ,
+  duration_ms INTEGER,
+  error_message TEXT,
+  logs JSONB DEFAULT '[]',
+  input_data JSONB DEFAULT '{}',
+  output_data JSONB DEFAULT '{}'
+);
+
+-- Integraciones conectadas por usuario
+CREATE TABLE user_integrations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  service TEXT NOT NULL,   -- 'gmail', 'slack', 'sheets', etc.
+  access_token TEXT,       -- Encriptado
+  refresh_token TEXT,      -- Encriptado
+  expires_at TIMESTAMPTZ,
+  metadata JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, service)
+);
+
+-- Índices para performance
+CREATE INDEX idx_workflows_user_id ON workflows(user_id);
+CREATE INDEX idx_executions_workflow_id ON workflow_executions(workflow_id);
+CREATE INDEX idx_executions_status ON workflow_executions(status);
+```
+
+## Consultas con Supabase Client
+```javascript
+// ✅ Siempre usa este patrón con Supabase:
+
+// Obtener workflows del usuario
+const { data, error } = await supabase
+  .from('workflows')
+  .select('*')
+  .eq('user_id', userId)
+  .order('updated_at', { ascending: false });
+
+if (error) throw AppError.badRequest(error.message);
+
+// Crear workflow
+const { data: newWorkflow, error: createError } = await supabase
+  .from('workflows')
+  .insert({
+    user_id: userId,
+    name: 'Mi Workflow',
+    nodes: [],
+    edges: []
+  })
+  .select()
+  .single();
+
+// Actualizar workflow
+const { error: updateError } = await supabase
+  .from('workflows')
+  .update({ nodes, edges, updated_at: new Date() })
+  .eq('id', workflowId)
+  .eq('user_id', userId); // Seguridad: solo su propio workflow
+```
+
+## Row Level Security (RLS) - SIEMPRE ACTIVAR
+```sql
+-- Habilitar RLS en todas las tablas
+ALTER TABLE workflows ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workflow_executions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_integrations ENABLE ROW LEVEL SECURITY;
+
+-- Política: usuarios solo ven sus propios datos
+CREATE POLICY "Users see own workflows"
+  ON workflows FOR ALL
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users see own executions"
+  ON workflow_executions FOR ALL
+  USING (
+    workflow_id IN (
+      SELECT id FROM workflows WHERE user_id = auth.uid()
+    )
+  );
+```
+
+
+# ============================================================
+# 7. SYSTEMATIC DEBUGGING SKILL
+# Resolver errores paso a paso
+# ============================================================
+
+## Cuando Hay un Error - Proceso Obligatorio
+
+### PASO 1: Lee el Error Completo
+```
+Nunca adivines. Lee:
+- El mensaje de error exacto
+- El archivo y línea donde ocurre
+- El stack trace completo
+- Qué acción del usuario lo disparó
+```
+
+### PASO 2: Clasifica el Error
+```
+¿Es un error de:
+- Sintaxis? → Typo, falta coma, paréntesis mal cerrado
+- Runtime? → Variable undefined, null reference
+- Lógica? → El código corre pero hace algo incorrecto
+- Red/API? → 400, 401, 404, 500 del backend
+- Base de datos? → Constraint violation, timeout
+- Autenticación? → Token expirado, permisos insuficientes
+```
+
+### PASO 3: Aísla el Problema
+```javascript
+// Agrega logs estratégicos ANTES de pedir ayuda:
+console.log('=== DEBUG ===');
+console.log('Variable problemática:', JSON.stringify(variable, null, 2));
+console.log('Estado actual:', estado);
+console.log('=== FIN DEBUG ===');
+```
+
+### PASO 4: Solución Mínima
+```
+No cambies 10 cosas a la vez.
+Cambia UNA SOLA COSA y prueba.
+Si funciona → bien.
+Si no → revierte y prueba otra cosa.
+```
+
+### PASO 5: Documenta la Solución
+```javascript
+// Agrega un comentario explicando qué era el bug:
+// FIX: El token de Supabase expiraba y no se refrescaba
+// SOLUCIÓN: Agregamos interceptor en apiClient para
+// detectar 401 y llamar a supabase.auth.refreshSession()
+```
+
+## Errores Comunes en Este Proyecto y Sus Soluciones
+
+```
+ERROR: "Cannot read properties of undefined"
+→ Verifica que el dato existe antes de usarlo
+→ Usa optional chaining: objeto?.propiedad?.valor
+
+ERROR: "CORS policy blocked"
+→ Verifica que el backend tenga cors() configurado
+→ El FRONTEND_URL en .env del backend debe coincidir
+
+ERROR: "401 Unauthorized"
+→ El token expiró o no se está enviando
+→ Verifica headers: Authorization: Bearer {token}
+
+ERROR: "relation does not exist" (Supabase)
+→ La tabla no fue creada en Supabase
+→ Ejecuta las migraciones SQL en el dashboard de Supabase
+
+ERROR: ReactFlow nodes no se muestran
+→ El contenedor padre debe tener height explícito
+→ Agrega: style={{ width: '100%', height: '100vh' }}
+```
+
+
+# ============================================================
+# 8. BRAINSTORMING SKILL
+# Generar soluciones creativas
+# ============================================================
+
+## Antes de Implementar Cualquier Feature
+
+Siempre analiza 3 opciones:
+
+```
+OPCIÓN A: La más simple
+- ¿Puedo resolverlo con lo que ya tengo?
+- ¿Cuántas líneas de código necesita?
+- ¿Qué librerías ya instaladas puedo usar?
+
+OPCIÓN B: La más robusta
+- ¿Cómo lo haría una empresa grande?
+- ¿Escala a 10,000 usuarios?
+- ¿Qué pasa si falla? ¿Hay fallback?
+
+OPCIÓN C: El balance ideal
+- Combina simplicidad con solidez
+- Perfecta para el estado actual del proyecto
+- Fácil de mejorar después
+```
+
+## Features Pendientes - Lista de Ideas
+```
+PRIORIZADAS para el MVP:
+□ Editor drag-and-drop con ReactFlow
+□ 5 integraciones básicas (Gmail, Slack, Webhook, HTTP, Sheets)
+□ Sistema de ejecución con logs en tiempo real
+□ Autenticación con Supabase
+□ Dashboard con métricas básicas
+
+PARA VERSIÓN 2:
+□ Asistente IA para crear workflows por descripción
+□ Templates de workflows pre-hechos
+□ Webhooks personalizados
+□ Historial completo de ejecuciones
+□ Sistema de variables entre nodos
+
+PARA VERSIÓN 3:
+□ Colaboración en tiempo real
+□ Marketplace de templates
+□ API pública para desarrolladores
+□ White-label para empresas
+```
+
+
+# ============================================================
+# 9. CHANGELOG GENERATOR
+# Documentar cambios profesionalmente
+# ============================================================
+
+## Formato de Commit Messages
+```
+Siempre usa este formato en git commits:
+
+feat: agrega editor drag-and-drop con ReactFlow
+fix: corrige error de CORS en producción
+style: mejora diseño de la navbar
+refactor: simplifica lógica del motor de ejecución
+docs: actualiza README con instrucciones de deploy
+test: agrega tests para WorkflowService
+chore: actualiza dependencias de seguridad
+
+Ejemplos reales:
+feat: conecta integración con Gmail API
+feat: agrega nodo de condicional if/else
+fix: resuelve token expirado en Supabase
+style: rediseña cards de workflows
+```
+
+## CHANGELOG.md - Actualizar Siempre
+```markdown
+# Changelog - AutomatiZa Pro
+
+## [Sin lanzar] - En Desarrollo
+### Agregado
+- Editor visual drag-and-drop
+- Integración con Gmail
+
+### Corregido
+- Error de autenticación con Supabase
+
+## [0.1.0] - 2024-01-15
+### Agregado
+- Proyecto inicial
+- Estructura base del frontend y backend
+```
+
+
+# ============================================================
+# 10. PROMPT ENGINEERING PARA CURSOR
+# Cómo pedirle cosas a Cursor efectivamente
+# ============================================================
+
+## Plantillas para Pedirle Código a Cursor
+
+### Para crear un componente nuevo:
+```
+Crea un componente React llamado [NOMBRE].
+- Debe hacer: [QUÉ HACE]
+- Recibe estas props: [PROPS]
+- Usa TailwindCSS para estilos
+- Tema oscuro, paleta del proyecto (#0f1117, #6366f1)
+- Incluye estados: loading, error, empty
+- Exporta como default
+- Agrega comentarios en español
+```
+
+### Para agregar una funcionalidad:
+```
+En el archivo [ARCHIVO], agrega [FUNCIONALIDAD].
+El código existente hace [QUÉ HACE ACTUALMENTE].
+La nueva funcionalidad debe:
+1. [PASO 1]
+2. [PASO 2]
+No rompas el código existente.
+```
+
+### Para corregir un error:
+```
+Tengo este error: [PEGAR ERROR COMPLETO]
+Ocurre cuando: [QUÉ ACCIÓN LO DISPARA]
+El código relevante es: [PEGAR CÓDIGO]
+¿Cuál es la causa y cómo lo corrijo?
+```
+
+### Para optimizar código:
+```
+Este código funciona pero puede mejorar: [PEGAR CÓDIGO]
+Objetivos de optimización:
+- [Más legible / Más rápido / Menos líneas / etc.]
+Mantén la misma funcionalidad.
+```
+
+
+# ============================================================
+# 11. SEGURIDAD - REGLAS CRÍTICAS
+# ============================================================
+
+## NUNCA hacer esto:
+```javascript
+// ❌ NUNCA pongas credenciales en el código
+const API_KEY = "sk-1234567890"; // MAL
+
+// ✅ SIEMPRE usa variables de entorno
+const API_KEY = process.env.GMAIL_API_KEY; // BIEN
+```
+
+## Variables de Entorno - Estructura
+```
+# Frontend (.env en carpeta frontend/)
+VITE_API_URL=http://localhost:3001
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+
+# Backend (.env en carpeta backend/)
+PORT=3001
+NODE_ENV=development
+SUPABASE_URL=
+SUPABASE_SERVICE_KEY=
+FRONTEND_URL=http://localhost:5173
+ENCRYPTION_KEY=         # Para encriptar tokens de integraciones
+JWT_SECRET=             # Para tokens de sesión
+```
+
+## Archivos que NUNCA van a GitHub
+```
+# .gitignore - SIEMPRE incluir:
+.env
+.env.local
+.env.production
+node_modules/
+.DS_Store
+dist/
+build/
+```
+
+
+# ============================================================
+# 12. ESTRUCTURA FINAL DEL PROYECTO
+# ============================================================
+
+```
+automatizador-pro/
+├── frontend/                    # Interfaz visual
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/              # Botones, inputs, modales
+│   │   │   ├── workflow/        # Editor, nodos, sidebar
+│   │   │   └── dashboard/      # Cards, stats, tabla
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── WorkflowEditor.jsx
+│   │   │   └── Integrations.jsx
+│   │   ├── hooks/
+│   │   │   ├── useWorkflow.js
+│   │   │   └── useAuth.js
+│   │   ├── services/
+│   │   │   ├── api.js           # Cliente axios
+│   │   │   ├── workflows.js     # CRUD workflows
+│   │   │   └── integrations.js  # Gestión integraciones
+│   │   ├── store/
+│   │   │   └── workflowStore.js # Estado global Zustand
+│   │   └── utils/
+│   │       └── helpers.js
+│   ├── .env
+│   ├── vite.config.js
+│   └── package.json
+│
+├── backend/                     # Servidor y lógica
+│   ├── src/
+│   │   ├── controllers/         # Manejo de requests
+│   │   ├── services/            # Lógica de negocio
+│   │   ├── middleware/          # Auth, errores, logs
+│   │   ├── routes/              # Definición de URLs
+│   │   └── utils/               # Helpers y AppError
+│   ├── .env
+│   └── package.json
+│
+├── .cursorrules                 # Este archivo
+├── .gitignore
+└── README.md
+```
+
+# ============================================================
+# FIN DE CURSORRULES
+# Versión 1.0 - AutomatiZa Pro
+# ============================================================
