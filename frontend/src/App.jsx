@@ -10,6 +10,8 @@ import Workflows from './pages/Workflows.jsx'
 import Analytics from './pages/Analytics.jsx'
 import Agents from './pages/Agents.jsx'
 import Settings from './pages/Settings.jsx'
+import Templates from './pages/Templates.jsx'
+import Integrations from './pages/Integrations.jsx'
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workflows" element={<Workflows />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/integrations" element={<Integrations />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/agents" element={<Agents />} />
           <Route path="/settings" element={<Settings />} />
